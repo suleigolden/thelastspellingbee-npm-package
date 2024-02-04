@@ -1,6 +1,6 @@
 import { FC } from 'react';
-interface Props {
+type Props = {
     alertMessage: any;
-}
+};
 declare const ActionAlert: FC<Props>;
 export default ActionAlert;

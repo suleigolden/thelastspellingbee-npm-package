@@ -118,40 +118,81 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
     };
 
     return (
-            <Flex direction="column" p="4" boxShadow={'sm'} borderRadius="md">
-                <FormControl>
-                    <FormLabel>
-                        I'm not a robot ..{' '}
-                        <Text as="b" color="#F26B3A">
-                            TheLastSpellingBee Re-Captcha
-                        </Text>
-                    </FormLabel>
-                    <Text>
-                        <b>IF A = 1, B = 2, 1 = A, 2 = B. What is</b>
-
-                        {Object.keys(rQuestion).map((key, index) => (
-                            <Box as="span" key={index} fontSize={22} border={'1px #a6d9fd solid'} ml="2" bg="white" color="blue.400" p="2" borderRadius="md" boxShadow="sm">
-                                {/* @ts-ignore */}
-                                {rQuestion[key]}
-                            </Box>
-                        ))}
-
-                        {!captchaResult && <IconButton aria-label="Refresh captcha" icon={<RepeatIcon />} size="sm" ml="4" onClick={refreshQuestion} />}
-                    </Text>
-                    {!captchaResult ? <Input id="answer" name="answer" value={answer} placeholder="Answer" onChange={onChange} required mt="4" /> : <Spinner />}
-                    {!captchaResult && (
-                        <Button mt="4" colorScheme="blue" h={8} fontSize={12} padding={3}>
-                            Verify
-                        </Button>
-                    )}
-                </FormControl>
-                 {answerMessage && toast({
-                title: "TheLastSpellingBee",
-                status: captchaResult ? 'success' : 'error',
-                description: captchaResult ? 'Success' : 'Try again!',
-                duration: 9000,
-                isClosable: true,
-            })} 
-            </Flex>
+        <Flex direction="column" p="4" style={{ boxShadow: 'sm', borderRadius: 'md' }}>
+        <FormControl>
+            <FormLabel style={{ display: 'flex', flexDirection: 'column' }}>
+                I'm not a robot ..{' '}
+                <Text as="b" style={{ color: '#F26B3A' }}>
+                    TheLastSpellingBee Re-Captcha
+                </Text>
+            </FormLabel>
+            <Text style={{ marginTop: '20px', marginBottom: '20px' }}>
+                <b>IF A = 1, B = 2, 1 = A, 2 = B. What is</b>
+                {Object.keys(rQuestion).map((key, index) => (
+                    <Box
+                        as="span"
+                        key={index}
+                        style={{
+                            fontSize: '22px',
+                            border: '1px #a6d9fd solid',
+                            marginLeft: '8px',
+                            backgroundColor: 'white',
+                            color: 'blue.400',
+                            padding: '8px',
+                            borderRadius: 'md',
+                            boxShadow: 'sm',
+                        }}
+                    >
+                        {/* @ts-ignore */}
+                        {rQuestion[key]}
+                    </Box>
+                ))}
+                {!captchaResult && (
+                    <IconButton
+                        aria-label="Refresh captcha"
+                        icon={<RepeatIcon />}
+                        size="sm"
+                        ml="4"
+                        onClick={refreshQuestion}
+                        style={{ marginLeft: '16px' }}
+                    />
+                )}
+            </Text>
+            {!captchaResult ? (
+                <Input
+                    id="answer"
+                    name="answer"
+                    value={answer}
+                    placeholder="Answer"
+                    onChange={onChange}
+                    required
+                    mt="4"
+                    style={{ marginTop: '16px' }}
+                />
+            ) : (
+                <Spinner />
+            )}
+            {!captchaResult && (
+                <Button
+                    mt="4"
+                    colorScheme="blue"
+                    h={8}
+                    fontSize="sm"
+                    padding="12px"
+                    onClick={onSubmit}
+                    style={{ marginTop: '16px', height: '32px', fontSize: '12px', padding: '12px' }}
+                >
+                    Verify
+                </Button>
+            )}
+        </FormControl>
+        {answerMessage && toast({
+            title: "TheLastSpellingBee",
+            description: captchaResult ? 'Success' : 'Try again!',
+            status: captchaResult ? 'success' : 'error',
+            duration: 9000,
+            isClosable: true,
+        })}
+    </Flex>
     );
 };
