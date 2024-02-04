@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-interface Props {
+type Props = {
     alertMessage: any;
 }
 const ActionAlert: FC<Props> = ({ alertMessage }) => {
