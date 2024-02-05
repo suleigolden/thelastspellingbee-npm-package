@@ -26,6 +26,19 @@ The `TheLastSpellingBeeReCaptcha` component accepts the following props:
 
 -   _questionType:_ `string` (optional): Specifies the type of question to be displayed. Available options are `CHARACTERS`, `NUMBERS`, `RANDOM`, or `COMPLEX`. If not provided, the default question
     type is `CHARACTERS`..
+
+### questionType Examples 
+`CHARACTERS Questions:` 
+    Question : D A D D Y
+    Answer: 4 1 4 4 25
+`NUMBERS Questions:` 
+    Question : 4 -1- 4 - 4 - 25
+    Answer: D A D D Y
+`RANDOM Questions:` 
+    Question : This is going to be generate both Characters and number randomly
+`COMPLEX Questions:` 
+    Question :  D - 1 - D - 4 - Y
+    Answer: 4 A 4 D 25
 -   _wordLength_ `number` (optional): Specifies the length of the character word that users need to answer. For example, if set to 3, users will be asked to provide a 3-character word. The default
     value is 3.
 -   _reCaptchaKey_ `secret` (required): A string representing the API key to use for the request.
