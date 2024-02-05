@@ -41,6 +41,7 @@ const recaptcha_1 = require("../recaptcha");
 const react_2 = require("@chakra-ui/react");
 const icons_1 = require("@chakra-ui/icons");
 const CircleLoader_1 = __importDefault(require("./CircleLoader"));
+const ActionAlert_1 = __importDefault(require("./ActionAlert"));
 const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, refreshonVerifyReCaptcha, refreshReCaptcha, onVerifyCaptcha }) => {
     const [formData, setFormData] = (0, react_1.useState)({
         answer: ''
@@ -50,7 +51,6 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
     const [answerMessage, setAnswerMessage] = (0, react_1.useState)('');
     const [loadComplete, setLoadComplete] = (0, react_1.useState)(false);
     const [captchaResult, setCaptchaResult] = (0, react_1.useState)(false);
-    const toast = (0, react_2.useToast)();
     const getCaptchaQuestion = () => __awaiter(void 0, void 0, void 0, function* () {
         const qType = questionType ? questionType : 'CHARACTERS';
         const wLength = wordLength ? wordLength : 3;
@@ -159,13 +159,8 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
                 !captchaResult && (react_1.default.createElement(react_2.IconButton, { "aria-label": "Refresh captcha", icon: react_1.default.createElement(icons_1.RepeatIcon, null), size: "sm", ml: "4", onClick: refreshQuestion, style: { marginLeft: '16px' } }))),
             !captchaResult ? (react_1.default.createElement("input", { type: "text", className: "form-control", style: { marginTop: '6px' }, id: "answer", name: "answer", value: answer, placeholder: "Answer", onChange: onChange, required: true })) : (react_1.default.createElement(CircleLoader_1.default, { loadComplete: loadComplete, setLoadComplete: setLoadComplete })),
             !captchaResult && (react_1.default.createElement(react_2.Button, { mt: "4", colorScheme: "blue", h: 8, fontSize: "sm", padding: "12px", onClick: onSubmit, style: { marginTop: '16px', height: '32px', fontSize: '12px', padding: '12px' } }, "Verify"))),
-        answerMessage && toast({
-            title: "TheLastSpellingBee",
-            description: captchaResult ? 'Success' : 'Try again!',
-            status: captchaResult ? 'success' : 'error',
-            duration: 9000,
-            isClosable: true,
-        })));
+        answerMessage,
+        answerMessage && react_1.default.createElement(ActionAlert_1.default, { alertMessage: answerMessage })));
 };
 exports.TheLastSpellingBeeReCaptcha = TheLastSpellingBeeReCaptcha;
 //# sourceMappingURL=TheLastSpellingBeeReCaptcha.js.map

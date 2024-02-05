@@ -1,8 +1,9 @@
 import React, { FC, useEffect, useState } from 'react';
 import { getReCaptchaQuestion, answerReCaptchaQuestion } from '../recaptcha';
-import { Box, FormControl, FormLabel, Button, Text, Flex, IconButton, useToast } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Button, Text, Flex, IconButton } from '@chakra-ui/react';
 import { RepeatIcon } from '@chakra-ui/icons';
 import CircleLoader from './CircleLoader';
+import ActionAlert from './ActionAlert';
 
 export type ITheLastSpellingBeeReCaptchaProps = {
     questionType?: any;
@@ -22,7 +23,6 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
     const [answerMessage, setAnswerMessage] = useState('');
     const [loadComplete, setLoadComplete] = useState(false);
     const [captchaResult, setCaptchaResult] = useState(false);
-    const toast = useToast();
     const getCaptchaQuestion = async () => {
         const qType = questionType ? questionType : 'CHARACTERS';
         const wLength = wordLength ? wordLength : 3;
@@ -178,13 +178,8 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                 </Button>
             )}
         </FormControl>
-        {answerMessage && toast({
-            title: "TheLastSpellingBee",
-            description: captchaResult ? 'Success' : 'Try again!',
-            status: captchaResult ? 'success' : 'error',
-            duration: 9000,
-            isClosable: true,
-        })}
+        {answerMessage}
+        {answerMessage && <ActionAlert alertMessage={answerMessage} />}
     </Flex>
     );
 };

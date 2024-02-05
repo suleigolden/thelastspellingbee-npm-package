@@ -9,9 +9,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 import React, { useEffect, useState } from 'react';
 import { getReCaptchaQuestion, answerReCaptchaQuestion } from '../recaptcha';
-import { Box, FormControl, FormLabel, Button, Text, Flex, IconButton, useToast } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Button, Text, Flex, IconButton } from '@chakra-ui/react';
 import { RepeatIcon } from '@chakra-ui/icons';
 import CircleLoader from './CircleLoader';
+import ActionAlert from './ActionAlert';
 export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, refreshonVerifyReCaptcha, refreshReCaptcha, onVerifyCaptcha }) => {
     const [formData, setFormData] = useState({
         answer: ''
@@ -21,7 +22,6 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
     const [answerMessage, setAnswerMessage] = useState('');
     const [loadComplete, setLoadComplete] = useState(false);
     const [captchaResult, setCaptchaResult] = useState(false);
-    const toast = useToast();
     const getCaptchaQuestion = () => __awaiter(void 0, void 0, void 0, function* () {
         const qType = questionType ? questionType : 'CHARACTERS';
         const wLength = wordLength ? wordLength : 3;
@@ -130,12 +130,7 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
                 !captchaResult && (React.createElement(IconButton, { "aria-label": "Refresh captcha", icon: React.createElement(RepeatIcon, null), size: "sm", ml: "4", onClick: refreshQuestion, style: { marginLeft: '16px' } }))),
             !captchaResult ? (React.createElement("input", { type: "text", className: "form-control", style: { marginTop: '6px' }, id: "answer", name: "answer", value: answer, placeholder: "Answer", onChange: onChange, required: true })) : (React.createElement(CircleLoader, { loadComplete: loadComplete, setLoadComplete: setLoadComplete })),
             !captchaResult && (React.createElement(Button, { mt: "4", colorScheme: "blue", h: 8, fontSize: "sm", padding: "12px", onClick: onSubmit, style: { marginTop: '16px', height: '32px', fontSize: '12px', padding: '12px' } }, "Verify"))),
-        answerMessage && toast({
-            title: "TheLastSpellingBee",
-            description: captchaResult ? 'Success' : 'Try again!',
-            status: captchaResult ? 'success' : 'error',
-            duration: 9000,
-            isClosable: true,
-        })));
+        answerMessage,
+        answerMessage && React.createElement(ActionAlert, { alertMessage: answerMessage })));
 };
 //# sourceMappingURL=TheLastSpellingBeeReCaptcha.js.map
