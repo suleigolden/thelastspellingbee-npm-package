@@ -31,12 +31,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TheLastSpellingBeeReCaptcha = void 0;
 const react_1 = __importStar(require("react"));
 const recaptcha_1 = require("../recaptcha");
 const react_2 = require("@chakra-ui/react");
 const icons_1 = require("@chakra-ui/icons");
+const CircleLoader_1 = __importDefault(require("./CircleLoader"));
 const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, refreshonVerifyReCaptcha, refreshReCaptcha, onVerifyCaptcha }) => {
     const [formData, setFormData] = (0, react_1.useState)({
         answer: ''
@@ -147,13 +151,13 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
                         border: '1px #a6d9fd solid',
                         marginLeft: '8px',
                         backgroundColor: 'white',
-                        color: 'blue.400',
+                        color: '#73c2fb',
                         padding: '8px',
                         borderRadius: 'md',
                         boxShadow: 'sm',
                     } }, rQuestion[key]))),
                 !captchaResult && (react_1.default.createElement(react_2.IconButton, { "aria-label": "Refresh captcha", icon: react_1.default.createElement(icons_1.RepeatIcon, null), size: "sm", ml: "4", onClick: refreshQuestion, style: { marginLeft: '16px' } }))),
-            !captchaResult ? (react_1.default.createElement(react_2.Input, { id: "answer", name: "answer", value: answer, placeholder: "Answer", onChange: onChange, required: true, mt: "4", style: { marginTop: '16px' } })) : (react_1.default.createElement(react_2.Spinner, null)),
+            !captchaResult ? (react_1.default.createElement("input", { type: "text", className: "form-control", style: { marginTop: '6px' }, id: "answer", name: "answer", value: answer, placeholder: "Answer", onChange: onChange, required: true })) : (react_1.default.createElement(CircleLoader_1.default, { loadComplete: loadComplete, setLoadComplete: setLoadComplete })),
             !captchaResult && (react_1.default.createElement(react_2.Button, { mt: "4", colorScheme: "blue", h: 8, fontSize: "sm", padding: "12px", onClick: onSubmit, style: { marginTop: '16px', height: '32px', fontSize: '12px', padding: '12px' } }, "Verify"))),
         answerMessage && toast({
             title: "TheLastSpellingBee",

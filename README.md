@@ -8,7 +8,7 @@ A simple and framework to generate and verify TheLastSpellingBee ReCaptcha. This
 
 npm install the-last-spelling-bee-re-captcha
 
-yarn install the-last-spelling-bee-re-captcha
+yarn add the-last-spelling-bee-re-captcha
 
 ```
 

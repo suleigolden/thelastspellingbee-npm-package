@@ -1,7 +1,8 @@
 import React, { FC, useEffect, useState } from 'react';
 import { getReCaptchaQuestion, answerReCaptchaQuestion } from '../recaptcha';
-import { Box, FormControl, FormLabel, Input, Button, Text, Flex, IconButton, useToast, Spinner } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Button, Text, Flex, IconButton, useToast } from '@chakra-ui/react';
 import { RepeatIcon } from '@chakra-ui/icons';
+import CircleLoader from './CircleLoader';
 
 export type ITheLastSpellingBeeReCaptchaProps = {
     questionType?: any;
@@ -137,7 +138,7 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                             border: '1px #a6d9fd solid',
                             marginLeft: '8px',
                             backgroundColor: 'white',
-                            color: 'blue.400',
+                            color: '#73c2fb',
                             padding: '8px',
                             borderRadius: 'md',
                             boxShadow: 'sm',
@@ -159,19 +160,10 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                 )}
             </Text>
             {!captchaResult ? (
-                <Input
-                    id="answer"
-                    name="answer"
-                    value={answer}
-                    placeholder="Answer"
-                    onChange={onChange}
-                    required
-                    mt="4"
-                    style={{ marginTop: '16px' }}
-                />
+                <input type="text" className="form-control" style={{ marginTop: '6px' }} id="answer" name="answer" value={answer} placeholder="Answer" onChange={onChange} required />
             ) : (
-                <Spinner />
-            )}
+                <CircleLoader loadComplete={loadComplete} setLoadComplete={setLoadComplete} />
+            )} 
             {!captchaResult && (
                 <Button
                     mt="4"
