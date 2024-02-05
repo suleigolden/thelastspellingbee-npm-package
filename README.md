@@ -28,22 +28,29 @@ The `TheLastSpellingBeeReCaptcha` component accepts the following props:
     type is `CHARACTERS`..
 
 ### questionType Examples 
-`CHARACTERS Questions:` 
+- `CHARACTERS Questions:` 
     Question : D A D D Y
     Answer: 4 1 4 4 25
-`NUMBERS Questions:` 
+
+- `NUMBERS Questions:` 
     Question : 4 -1- 4 - 4 - 25
     Answer: D A D D Y
-`RANDOM Questions:` 
+
+- `RANDOM Questions:` 
     Question : This is going to be generate both Characters and number randomly
-`COMPLEX Questions:` 
+
+- `COMPLEX Questions:` 
     Question :  D - 1 - D - 4 - Y
     Answer: 4 A 4 D 25
+
 -   _wordLength_ `number` (optional): Specifies the length of the character word that users need to answer. For example, if set to 3, users will be asked to provide a 3-character word. The default
     value is 3.
+
 -   _reCaptchaKey_ `secret` (required): A string representing the API key to use for the request.
 -   _refreshonVerifyReCaptcha_ (optional): Specifies whether to refresh the ReCaptcha widget after a successful verification. Default is `false`.
+
 -   _refreshReCaptcha_ (optional): Specifies whether to refresh the ReCaptcha widget on every render. Default is `false`.
+
 -   _onVerifyCaptcha_ (required): A callback function that will be called when the user completes the ReCaptcha challenge. It receives the verification result as a parameter.
 
 ### Examples
