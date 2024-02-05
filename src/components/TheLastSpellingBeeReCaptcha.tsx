@@ -160,7 +160,28 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                 )}
             </Text>
             {!captchaResult ? (
-                <input type="text" className="form-control" style={{ marginTop: '6px' }} id="answer" name="answer" value={answer} placeholder="Answer" onChange={onChange} required />
+                <input type="text" 
+                style={{
+                    display: 'block',
+                    width: '100%', 
+                    height: '34px',
+                    padding: '6px 12px',
+                    fontSize: '14px',
+                    lineHeight: '1.42857143',
+                    color: '#555',
+                    backgroundColor: '#FFF',
+                    backgroundImage: 'none',
+                    border: '1px solid #ccc',
+                    borderRadius: '4px',
+                    fontFamily: 'inherit',
+                    boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075)',
+                    boxSizing: 'border-box',
+                    transition: 'border-color ease-in-out .15s, box-shadow ease-in-out .15s',
+                    marginTop: '6px',
+                  }}
+                  id="answer" 
+                  name="answer" 
+                  value={answer} placeholder="Answer" onChange={onChange} required />
             ) : (
                 <CircleLoader loadComplete={loadComplete} setLoadComplete={setLoadComplete} />
             )} 
