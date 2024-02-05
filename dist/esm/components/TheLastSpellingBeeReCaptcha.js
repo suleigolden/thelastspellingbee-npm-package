@@ -110,6 +110,25 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
     const onChange = (e) => {
         setFormData((prevState) => (Object.assign(Object.assign({}, prevState), { [e.target.name]: e.target.value.toUpperCase() })));
     };
+    const getRandomColor = () => {
+        const colors = [
+            '#ff6347', // Tomato
+            '#4682b4', // Steel Blue
+            '#6a5acd', // Slate Blue
+            '#008080', // Teal
+            '#a6d9fd',
+            '#73c2fb',
+            '#F26B3A',
+            '#db7093', // Pale Violet Red
+            '#ffa07a', // Light Salmon
+            '#9acd32' // Yellow Green
+        ];
+        const randomIndex = Math.floor(Math.random() * colors.length);
+        return colors[randomIndex];
+    };
+    const getRandomBoolean = () => {
+        return Math.random() >= 0.5;
+    };
     return (React.createElement(Flex, { direction: "column", p: "4", style: { boxShadow: 'sm', borderRadius: 'md' } },
         React.createElement(FormControl, null,
             React.createElement(FormLabel, { style: { display: 'flex', flexDirection: 'column' } },
@@ -120,10 +139,10 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
                 React.createElement("b", null, "IF A = 1, B = 2, 1 = A, 2 = B. What is"),
                 Object.keys(rQuestion).map((key, index) => (React.createElement(Box, { as: "span", key: index, style: {
                         fontSize: '22px',
-                        border: '1px #a6d9fd solid',
+                        border: getRandomBoolean() ? `2px dotted ${getRandomColor()}` : `1px ${getRandomColor()} solid`,
                         marginLeft: '8px',
                         backgroundColor: 'white',
-                        color: '#73c2fb',
+                        color: getRandomColor(),
                         padding: '8px',
                         borderRadius: 'md',
                         boxShadow: 'sm',
