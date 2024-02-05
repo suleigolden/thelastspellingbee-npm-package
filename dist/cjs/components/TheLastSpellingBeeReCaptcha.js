@@ -83,12 +83,11 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
                 }
             }
             catch (error) {
-                // Handle error
                 console.error(error);
             }
         });
         fetchData();
-    }, []); // Empty dependency array
+    }, []);
     const refreshQuestion = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const response = yield getCaptchaQuestion();
@@ -97,7 +96,6 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
             }
         }
         catch (error) {
-            // Handle error
             console.error(error);
         }
     });
@@ -117,11 +115,14 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
     const answerRecaptcha = (question, answer, apiKey) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const result = yield (0, recaptcha_1.answerReCaptchaQuestion)(question, answer, apiKey);
-            setAnswerMessage(result.message);
             onVerifyCaptcha(result.message);
             if (result.message) {
                 setLoadComplete(!loadComplete);
                 setCaptchaResult(true);
+                setAnswerMessage('yes');
+            }
+            else {
+                setAnswerMessage('no');
             }
         }
         catch (error) {
@@ -176,8 +177,7 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
                     marginTop: '6px',
                 }, id: "answer", name: "answer", value: answer, placeholder: "Answer", onChange: onChange, required: true })) : (react_1.default.createElement(CircleLoader_1.default, { loadComplete: loadComplete, setLoadComplete: setLoadComplete })),
             !captchaResult && (react_1.default.createElement(react_2.Button, { mt: "4", colorScheme: "blue", h: 8, fontSize: "sm", padding: "12px", onClick: onSubmit, style: { marginTop: '16px', height: '32px', fontSize: '12px', padding: '12px' } }, "Verify"))),
-        answerMessage,
-        answerMessage && react_1.default.createElement(ActionAlert_1.default, { alertMessage: answerMessage })));
+        react_1.default.createElement(ActionAlert_1.default, { alertMessage: answerMessage })));
 };
 exports.TheLastSpellingBeeReCaptcha = TheLastSpellingBeeReCaptcha;
 //# sourceMappingURL=TheLastSpellingBeeReCaptcha.js.map

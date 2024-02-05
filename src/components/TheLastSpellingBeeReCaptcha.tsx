@@ -19,10 +19,10 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
         answer: ''
     });
     const { answer } = formData;
-    const [rQuestion, setRQuestion] = useState('');
-    const [answerMessage, setAnswerMessage] = useState('');
-    const [loadComplete, setLoadComplete] = useState(false);
-    const [captchaResult, setCaptchaResult] = useState(false);
+    const [rQuestion, setRQuestion] = useState<string>('');
+    const [answerMessage, setAnswerMessage] = useState<string>('');
+    const [loadComplete, setLoadComplete] = useState<boolean>(false);
+    const [captchaResult, setCaptchaResult] = useState<boolean>(false);
     const getCaptchaQuestion = async () => {
         const qType = questionType ? questionType : 'CHARACTERS';
         const wLength = wordLength ? wordLength : 3;
@@ -55,13 +55,12 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                     setRQuestion(splitQuestion(response.question));
                 }
             } catch (error) {
-                // Handle error
                 console.error(error);
             }
         };
 
         fetchData();
-    }, []); // Empty dependency array
+    }, []); 
 
     const refreshQuestion = async () => {
         try {
@@ -70,7 +69,6 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                 setRQuestion(splitQuestion(response.question));
             }
         } catch (error) {
-            // Handle error
             console.error(error);
         }
     };
@@ -90,11 +88,14 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
     const answerRecaptcha = async (question: any, answer: any, apiKey: string) => {
         try {
             const result = await answerReCaptchaQuestion(question, answer, apiKey);
-            setAnswerMessage(result.message);
+            
             onVerifyCaptcha(result.message);
             if (result.message) {
                 setLoadComplete(!loadComplete);
                 setCaptchaResult(true);
+                setAnswerMessage('yes');
+            }else{
+                setAnswerMessage('no');
             }
         } catch (error) {
             console.error(error);
@@ -199,8 +200,7 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                 </Button>
             )}
         </FormControl>
-        {answerMessage}
-        {answerMessage && <ActionAlert alertMessage={answerMessage} />}
+       <ActionAlert alertMessage={answerMessage} />
     </Flex>
     );
 };

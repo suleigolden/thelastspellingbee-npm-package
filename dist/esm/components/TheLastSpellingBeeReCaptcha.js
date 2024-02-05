@@ -54,12 +54,11 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
                 }
             }
             catch (error) {
-                // Handle error
                 console.error(error);
             }
         });
         fetchData();
-    }, []); // Empty dependency array
+    }, []);
     const refreshQuestion = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const response = yield getCaptchaQuestion();
@@ -68,7 +67,6 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
             }
         }
         catch (error) {
-            // Handle error
             console.error(error);
         }
     });
@@ -88,11 +86,14 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
     const answerRecaptcha = (question, answer, apiKey) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const result = yield answerReCaptchaQuestion(question, answer, apiKey);
-            setAnswerMessage(result.message);
             onVerifyCaptcha(result.message);
             if (result.message) {
                 setLoadComplete(!loadComplete);
                 setCaptchaResult(true);
+                setAnswerMessage('yes');
+            }
+            else {
+                setAnswerMessage('no');
             }
         }
         catch (error) {
@@ -147,7 +148,6 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
                     marginTop: '6px',
                 }, id: "answer", name: "answer", value: answer, placeholder: "Answer", onChange: onChange, required: true })) : (React.createElement(CircleLoader, { loadComplete: loadComplete, setLoadComplete: setLoadComplete })),
             !captchaResult && (React.createElement(Button, { mt: "4", colorScheme: "blue", h: 8, fontSize: "sm", padding: "12px", onClick: onSubmit, style: { marginTop: '16px', height: '32px', fontSize: '12px', padding: '12px' } }, "Verify"))),
-        answerMessage,
-        answerMessage && React.createElement(ActionAlert, { alertMessage: answerMessage })));
+        React.createElement(ActionAlert, { alertMessage: answerMessage })));
 };
 //# sourceMappingURL=TheLastSpellingBeeReCaptcha.js.map
