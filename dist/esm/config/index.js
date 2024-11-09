@@ -1,6 +1,6 @@
 export const config = {
     baseUrl: {
-        default: 'https://44.214.68.53/api/code-bender/'
+        default: 'https://thelastspellingbee-api.onrender.com/'
     }
 };
 //# sourceMappingURL=index.js.map
