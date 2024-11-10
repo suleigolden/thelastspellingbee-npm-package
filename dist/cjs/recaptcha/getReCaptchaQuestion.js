@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getReCaptchaQuestion = void 0;
+exports.getReCaptchaQuestion = getReCaptchaQuestion;
 const axios_1 = __importDefault(require("axios"));
 const index_1 = require("../config/index");
 const API_URL = index_1.config.baseUrl.default;
@@ -32,5 +32,4 @@ function getReCaptchaQuestion(questionType, wordLength, apiKey) {
         }
     });
 }
-exports.getReCaptchaQuestion = getReCaptchaQuestion;
 //# sourceMappingURL=getReCaptchaQuestion.js.map
