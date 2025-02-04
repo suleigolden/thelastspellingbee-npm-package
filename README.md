@@ -1,145 +1,160 @@
-# the-last-spelling-bee-re-captcha
+# TheLastSpellingBee ReCaptcha
 
-A simple and framework to generate and verify TheLastSpellingBee ReCaptcha. This package currently supports [TheLastSpellingBeeReCaptcha V1](https://thelastspellingbee.com/api-reference).
+A modern, user-friendly CAPTCHA component for React applications that uses spelling and character conversion challenges. This package provides a secure and accessible way to verify human users.
+
+![NPM Version](https://img.shields.io/npm/v/the-last-spelling-bee-re-captcha)
+![License](https://img.shields.io/npm/l/the-last-spelling-bee-re-captcha)
+
+## Features
+
+- 🔒 Secure character-based verification
+- 🎨 Modern, responsive UI with Chakra UI
+- 🌈 Dynamic color schemes
+- ⌨️ Anti-paste protection
+- ♿ Accessibility support
+- 🔄 Refresh capability
+- 📱 Mobile-friendly design
 
 ## Installation
 
+Using npm:
 ```bash
-
 npm install the-last-spelling-bee-re-captcha
-
-yarn add the-last-spelling-bee-re-captcha
-
 ```
 
-## Usage
-
+Using yarn:
 ```bash
+yarn add the-last-spelling-bee-re-captcha
+```
 
+## Quick Start
+
+```jsx
 import { TheLastSpellingBeeReCaptcha } from 'the-last-spelling-bee-re-captcha';
 
+function MyForm() {
+    const handleVerification = (verified) => {
+        if (verified) {
+            console.log('User verified!');
+        }
+    };
+
+    return (
+        <TheLastSpellingBeeReCaptcha
+            reCaptchaKey="your-api-key"
+            onVerifyCaptcha={handleVerification}
+        />
+    );
+}
 ```
 
-### Props
+## API Reference
 
-The `TheLastSpellingBeeReCaptcha` component accepts the following props:
+### TheLastSpellingBeeReCaptcha Props
 
--   _questionType:_ `string` (optional): Specifies the type of question to be displayed. Available options are `CHARACTERS`, `NUMBERS`, `RANDOM`, or `COMPLEX`. If not provided, the default question
-    type is `CHARACTERS`..
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `reCaptchaKey` | `string` | Required | Your API key from TheLastSpellingBee |
+| `questionType` | `'CHARACTERS' \| 'NUMBERS' \| 'RANDOM' \| 'COMPLEX'` | `'CHARACTERS'` | Type of question to display |
+| `wordLength` | `number` | `3` | Length of the word/answer |
+| `onVerifyCaptcha` | `(verified: boolean) => void` | Required | Callback function called after verification |
 
-### questionType Examples 
-- `CHARACTERS Questions:` 
-    Question : D A D D Y
-    Answer: 4 1 4 4 25
+### Question Types
 
-- `NUMBERS Questions:` 
-    Question : 4 -1- 4 - 4 - 25
-    Answer: D A D D Y
+#### CHARACTERS
+- Question Format: `D A D D Y`
+- Expected Answer: `4 1 4 4 25`
+- Description: Convert letters to their position in the alphabet
 
-- `RANDOM Questions:` 
-    Question : This is going to be generate both Characters and number randomly
+#### NUMBERS
+- Question Format: `4 1 4 4 25`
+- Expected Answer: `D A D D Y`
+- Description: Convert numbers to their corresponding letters
 
-- `COMPLEX Questions:` 
-    Question :  D - 1 - D - 4 - Y
-    Answer: 4 A 4 D 25
+#### RANDOM
+- Description: Randomly alternates between CHARACTERS and NUMBERS
 
--   _wordLength_ `number` (optional): Specifies the length of the character word that users need to answer. For example, if set to 3, users will be asked to provide a 3-character word. The default
-    value is 3.
+#### COMPLEX
+- Question Format: `D 1 D 4 Y`
+- Expected Answer: `4 A 4 D 25`
+- Description: Mixed format requiring both letter-to-number and number-to-letter conversion
 
--   _reCaptchaKey_ `secret` (required): A string representing the API key to use for the request.
--   _refreshonVerifyReCaptcha_ (optional): Specifies whether to refresh the ReCaptcha widget after a successful verification. Default is `false`.
+## Security Features
 
--   _refreshReCaptcha_ (optional): Specifies whether to refresh the ReCaptcha widget on every render. Default is `false`.
+- Prevents copy-paste actions
+- Requires manual typing
+- Character-by-character validation
+- Rate limiting on API requests
+- Secure API key validation
 
--   _onVerifyCaptcha_ (required): A callback function that will be called when the user completes the ReCaptcha challenge. It receives the verification result as a parameter.
+## Examples
 
-### Examples
-
--   Here is an example usage of the `TheLastSpellingBeeReCaptcha` component:.
--   Get your ReCaptcha API Key here [TheLastSpellingBeeTest Recaptcha API KEY](https://thelastspellingbee.com/api-key)
-
-```js
+### Basic Usage
+```jsx
 <TheLastSpellingBeeReCaptcha
-    reCaptchaKey={'your-TheLastSpellingBee-key'}
-    onVerifyCaptcha={(result) => {
-        // Handle the captcha verification result
-        console.log('Result: ', result);
+    reCaptchaKey="your-api-key"
+    onVerifyCaptcha={(verified) => {
+        if (verified) {
+            // Handle successful verification
+        }
     }}
 />
 ```
 
-### Example Response
-
-An example response from the `TheLastSpellingBeeReCaptcha` after a successful verification:
-
-```js
-{
-  "status": 200,
-  "result": true
-}
-
+### Custom Configuration
+```jsx
+<TheLastSpellingBeeReCaptcha
+    reCaptchaKey="your-api-key"
+    questionType="COMPLEX"
+    wordLength={5}
+    onVerifyCaptcha={(verified) => {
+        if (verified) {
+            // Handle successful verification
+        } else {
+            // Handle failed verification
+        }
+    }}
+/>
 ```
-
-### Notes
-
--   Make sure to replace 'your-TheLastSpellingBee-key' with your actual TheLastSpellingBee ReCaptcha API key.
--   The onVerifyCaptcha callback function should handle the verification result according to your application's requirements.
--   The package provides a default question type of CHARACTERS and a default word length of 3 if not explicitly specified.
--   Please refer to the documentation of TheLastSpellingBee ReCaptcha for more information (https://thelastspellingbee.com/api-reference)
 
 ## Error Handling
 
-The `TheLastSpellingBeeReCaptcha` component may encounter errors during initialization or verification. You can handle these errors by wrapping the component in a try-catch block or utilizing the `onError`
-prop.
+The component includes built-in error handling with user-friendly toast notifications for:
+- Invalid API keys
+- Network errors
+- Invalid input attempts
+- Copy-paste attempts
+- Verification failures
 
-```js
-try {
-    <TheLastSpellingBeeReCaptcha
-        reCaptchaKey={'your-TheLastSpellingBee-key'}
-        onVerifyCaptcha={(result) => {
-            // Handle the captcha verification result
-            console.log('Result: ', result);
-        }}
-        onError={(error) => {
-            // Handle the error
-            console.error('Error: ', error);
-        }}
-    />;
-} catch (error) {
-    // Handle the result error
-    console.error('Error: ', error);
-}
-```
+## Getting an API Key
 
-The `onError` prop allows you to specify a callback function that will be called when an error occurs. It receives the error object as a parameter.
+1. Visit [TheLastSpellingBee](https://thelastspellingbee.com/api-key)
+2. Create an account or log in
+3. Generate your API key
+4. Use the key in your application
 
-## Dependencies
+## Browser Support
 
-The `the-last-spelling-bee-re-captcha` package has one dependency: `axios`. This package is used to make HTTP requests to the ReCaptcha API.
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- Mobile browsers
 
-## Contribution
+## Contributing
 
-If you would like to contribute to the `the-last-spelling-bee-re-captcha` package, you can do so by submitting a pull request on GitHub. The package repository can be found at
-https://github.com/suleigolden/thelastspellingbee-npm-package
-
-## Credits
-
-The `the-last-spelling-bee-re-captcha` package was created by TheLastCodeBender and is maintained by TheLastSpellingBeeGTest.
-
-The package was inspired by the ReCaptcha API provided by Google, which is used by millions of websites to protect against spam and abuse.
-
-We would like to thank the developers of the following open source packages, which were used in the creation of this package:
-
--   `axios`: A promise-based HTTP client for the browser and Node.js.
--   `fetch`: A browser API for making HTTP requests.
--   `Jest`: A JavaScript testing framework used for unit testing.
-
-We also want to thank the many contributors who have helped improve the package through bug reports, feature requests, and code contributions. Your contributions are greatly appreciated!
-
-If you have any questions or feedback about the package, please don't hesitate to contact us. We would be happy to hear from you.
+We welcome contributions! Please see our [Contributing Guide](https://github.com/suleigolden/thelastspellingbee-npm-package/blob/main/CONTRIBUTING.md) for details.
 
 ## License
 
-Copyright (c) 2025 TheLastSpellingBee
+MIT © [TheLastSpellingBee](https://thelastspellingbee.com)
 
-MIT (http://www.opensource.org/licenses/mit-license.php)
+## Support
+
+- Documentation: [Full API Reference](https://thelastspellingbee.com/api-reference)
+- Issues: [GitHub Issues](https://github.com/suleigolden/thelastspellingbee-npm-package/issues)
+- Email: support@thelastspellingbee.com
+
+## Changelog
+
+See [CHANGELOG.md](https://github.com/suleigolden/thelastspellingbee-npm-package/blob/main/CHANGELOG.md) for release history.
