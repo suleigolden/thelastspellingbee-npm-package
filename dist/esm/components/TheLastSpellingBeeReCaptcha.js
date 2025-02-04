@@ -49,7 +49,7 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
         const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const response = yield getCaptchaQuestion();
-                if (response.question) {
+                if (response[0].question) {
                     setRQuestion(splitQuestion(response[0].question));
                 }
             }
@@ -62,8 +62,8 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
     const refreshQuestion = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const response = yield getCaptchaQuestion();
-            if (response.question) {
-                setRQuestion(splitQuestion(response.question));
+            if (response[0].question) {
+                setRQuestion(splitQuestion(response[0].question));
             }
         }
         catch (error) {
@@ -87,7 +87,7 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
         try {
             const result = yield answerReCaptchaQuestion(question, answer, apiKey);
             onVerifyCaptcha(result.message);
-            if (result.message) {
+            if (result.status) {
                 setLoadComplete(!loadComplete);
                 setCaptchaResult(true);
                 setAnswerMessage('yes');
@@ -145,9 +145,9 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
                         color: getRandomColor(),
                         padding: '8px',
                         borderRadius: 'md',
-                        boxShadow: 'sm',
+                        boxShadow: 'sm'
                     } }, rQuestion[key]))),
-                !captchaResult && (React.createElement(IconButton, { "aria-label": "Refresh captcha", icon: React.createElement(RepeatIcon, null), size: "sm", ml: "4", onClick: refreshQuestion, style: { marginLeft: '16px' } }))),
+                !captchaResult && React.createElement(IconButton, { "aria-label": "Refresh captcha", icon: React.createElement(RepeatIcon, null), size: "sm", ml: "4", onClick: refreshQuestion, style: { marginLeft: '16px' } })),
             !captchaResult ? (React.createElement("input", { type: "text", style: {
                     display: 'block',
                     width: '100%',
@@ -164,7 +164,7 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
                     boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075)',
                     boxSizing: 'border-box',
                     transition: 'border-color ease-in-out .15s, box-shadow ease-in-out .15s',
-                    marginTop: '6px',
+                    marginTop: '6px'
                 }, id: "answer", name: "answer", value: answer, placeholder: "Answer", onChange: onChange, required: true })) : (React.createElement(CircleLoader, { loadComplete: loadComplete, setLoadComplete: setLoadComplete })),
             !captchaResult && (React.createElement(Button, { mt: "4", colorScheme: "blue", h: 8, fontSize: "sm", padding: "12px", onClick: onSubmit, style: { marginTop: '16px', height: '32px', fontSize: '12px', padding: '12px' } }, "Verify"))),
         React.createElement(ActionAlert, { alertMessage: answerMessage })));

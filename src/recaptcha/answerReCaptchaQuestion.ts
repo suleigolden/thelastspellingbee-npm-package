@@ -5,13 +5,12 @@ import { QuestionType } from './getReCaptchaQuestion';
 const API_URL = config.baseUrl.default;
 
 async function answerReCaptchaQuestion(
-    question: string, 
-    answer: string, 
+    question: string | number, 
+    answer: string | number, 
     apiKey: string,
     type?: QuestionType,
     hiddenValue?: string
 ) {
-
     try {
         const response = await axios.post(
             `${API_URL}check-answer`,
@@ -24,7 +23,7 @@ async function answerReCaptchaQuestion(
             {
                 headers: {
                     'Content-Type': 'application/json',
-                    apikey: apiKey
+                    'apiKey': apiKey
                 }
             }
         );
@@ -36,7 +35,12 @@ async function answerReCaptchaQuestion(
         }
     } catch (error: any) {
         if (error.response) {
-            console.log(`Request failed with status ${JSON.stringify(error.response.data)}`);
+            console.error('Error response:', {
+                status: error.response.status,
+                data: error.response.data,
+                headers: error.response.headers
+            });
+            throw new Error(error.response.data.message || 'Request failed');
         } else if (error.request) {
             throw new Error(`Request failed: ${error.message}`);
         } else {

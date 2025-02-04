@@ -78,7 +78,7 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
         const fetchData = () => __awaiter(void 0, void 0, void 0, function* () {
             try {
                 const response = yield getCaptchaQuestion();
-                if (response.question) {
+                if (response[0].question) {
                     setRQuestion(splitQuestion(response[0].question));
                 }
             }
@@ -91,8 +91,8 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
     const refreshQuestion = () => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const response = yield getCaptchaQuestion();
-            if (response.question) {
-                setRQuestion(splitQuestion(response.question));
+            if (response[0].question) {
+                setRQuestion(splitQuestion(response[0].question));
             }
         }
         catch (error) {
@@ -116,7 +116,7 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
         try {
             const result = yield (0, recaptcha_1.answerReCaptchaQuestion)(question, answer, apiKey);
             onVerifyCaptcha(result.message);
-            if (result.message) {
+            if (result.status) {
                 setLoadComplete(!loadComplete);
                 setCaptchaResult(true);
                 setAnswerMessage('yes');
@@ -174,9 +174,9 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
                         color: getRandomColor(),
                         padding: '8px',
                         borderRadius: 'md',
-                        boxShadow: 'sm',
+                        boxShadow: 'sm'
                     } }, rQuestion[key]))),
-                !captchaResult && (react_1.default.createElement(react_2.IconButton, { "aria-label": "Refresh captcha", icon: react_1.default.createElement(icons_1.RepeatIcon, null), size: "sm", ml: "4", onClick: refreshQuestion, style: { marginLeft: '16px' } }))),
+                !captchaResult && react_1.default.createElement(react_2.IconButton, { "aria-label": "Refresh captcha", icon: react_1.default.createElement(icons_1.RepeatIcon, null), size: "sm", ml: "4", onClick: refreshQuestion, style: { marginLeft: '16px' } })),
             !captchaResult ? (react_1.default.createElement("input", { type: "text", style: {
                     display: 'block',
                     width: '100%',
@@ -193,7 +193,7 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
                     boxShadow: 'inset 0 1px 1px rgba(0,0,0,.075)',
                     boxSizing: 'border-box',
                     transition: 'border-color ease-in-out .15s, box-shadow ease-in-out .15s',
-                    marginTop: '6px',
+                    marginTop: '6px'
                 }, id: "answer", name: "answer", value: answer, placeholder: "Answer", onChange: onChange, required: true })) : (react_1.default.createElement(CircleLoader_1.default, { loadComplete: loadComplete, setLoadComplete: setLoadComplete })),
             !captchaResult && (react_1.default.createElement(react_2.Button, { mt: "4", colorScheme: "blue", h: 8, fontSize: "sm", padding: "12px", onClick: onSubmit, style: { marginTop: '16px', height: '32px', fontSize: '12px', padding: '12px' } }, "Verify"))),
         react_1.default.createElement(ActionAlert_1.default, { alertMessage: answerMessage })));

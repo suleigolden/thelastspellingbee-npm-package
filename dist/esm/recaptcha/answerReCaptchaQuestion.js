@@ -21,7 +21,7 @@ function answerReCaptchaQuestion(question, answer, apiKey, type, hiddenValue) {
             }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    apikey: apiKey
+                    'apiKey': apiKey
                 }
             });
             if (response.status === 200) {
@@ -33,7 +33,12 @@ function answerReCaptchaQuestion(question, answer, apiKey, type, hiddenValue) {
         }
         catch (error) {
             if (error.response) {
-                console.log(`Request failed with status ${JSON.stringify(error.response.data)}`);
+                console.error('Error response:', {
+                    status: error.response.status,
+                    data: error.response.data,
+                    headers: error.response.headers
+                });
+                throw new Error(error.response.data.message || 'Request failed');
             }
             else if (error.request) {
                 throw new Error(`Request failed: ${error.message}`);
