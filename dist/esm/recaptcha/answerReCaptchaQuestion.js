@@ -13,40 +13,31 @@ const API_URL = config.baseUrl.default;
 function answerReCaptchaQuestion(question, answer, apiKey, type, hiddenValue) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const response = yield axios.post(`${API_URL}check-answer`, {
-                question,
-                answer,
-                type: type !== null && type !== void 0 ? type : "null",
+            const requestData = {
+                apiKey,
+                type: type !== null && type !== void 0 ? type : 'null',
+                question: String(question),
+                answer: String(answer),
                 hiddenValue: hiddenValue !== null && hiddenValue !== void 0 ? hiddenValue : 'null'
-            }, {
+            };
+            const response = yield axios.post(`${API_URL}check-answer`, requestData, {
                 headers: {
-                    'Content-Type': 'application/json',
-                    'apiKey': apiKey
+                    'Content-Type': 'application/json'
                 }
             });
-            if (response.status === 200) {
-                return response.data;
-            }
-            else {
-                throw new Error(`Request failed with status ${response.status}: --${response.data.errorMessage}`);
-            }
+            return response.data;
         }
         catch (error) {
             if (error.response) {
-                console.error('Error response:', {
-                    status: error.response.status,
-                    data: error.response.data,
-                    headers: error.response.headers
-                });
-                throw new Error(error.response.data.message || 'Request failed');
+                const errorResponse = error.response.data;
+                throw new Error(Array.isArray(errorResponse.message)
+                    ? errorResponse.message.join(', ')
+                    : errorResponse.message || 'Request failed');
             }
-            else if (error.request) {
-                throw new Error(`Request failed: ${error.message}`);
+            if (error.request) {
+                throw new Error('No response received from server');
             }
-            else {
-                console.error(error);
-                throw new Error(`Request failed: ${error.message}`);
-            }
+            throw new Error(`Request failed: ${error.message}`);
         }
     });
 }

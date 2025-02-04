@@ -4,50 +4,63 @@ import { QuestionType } from './getReCaptchaQuestion';
 
 const API_URL = config.baseUrl.default;
 
+type CheckAnswerRequest = {
+    apiKey: string;
+    type: QuestionType | 'null';
+    question: string | number;
+    answer: string | number;
+    hiddenValue?: string;
+}
+
+type CheckAnswerResponse = {
+    status: number;
+    message: string;
+    data?: any;
+}
+
 async function answerReCaptchaQuestion(
     question: string | number, 
     answer: string | number, 
     apiKey: string,
     type?: QuestionType,
     hiddenValue?: string
-) {
+): Promise<CheckAnswerResponse> {
     try {
-        const response = await axios.post(
+        const requestData: CheckAnswerRequest = {
+            apiKey,
+            type: type ?? 'null',
+            question: String(question),
+            answer: String(answer),
+            hiddenValue: hiddenValue ?? 'null'
+        };
+
+        const response = await axios.post<CheckAnswerResponse>(
             `${API_URL}check-answer`,
-            {
-                question,
-                answer,
-                type: type ?? "null",
-                hiddenValue: hiddenValue ?? 'null'
-            },
+            requestData,
             {
                 headers: {
-                    'Content-Type': 'application/json',
-                    'apiKey': apiKey
+                    'Content-Type': 'application/json'
                 }
             }
         );
 
-        if (response.status === 200) {
-            return response.data;
-        } else {
-            throw new Error(`Request failed with status ${response.status}: --${response.data.errorMessage}`);
-        }
+        return response.data;
     } catch (error: any) {
         if (error.response) {
-            console.error('Error response:', {
-                status: error.response.status,
-                data: error.response.data,
-                headers: error.response.headers
-            });
-            throw new Error(error.response.data.message || 'Request failed');
-        } else if (error.request) {
-            throw new Error(`Request failed: ${error.message}`);
-        } else {
-            console.error(error);
-            throw new Error(`Request failed: ${error.message}`);
+            const errorResponse = error.response.data;
+            throw new Error(
+                Array.isArray(errorResponse.message) 
+                    ? errorResponse.message.join(', ') 
+                    : errorResponse.message || 'Request failed'
+            );
         }
+        
+        if (error.request) {
+            throw new Error('No response received from server');
+        }
+        
+        throw new Error(`Request failed: ${error.message}`);
     }
 }
 
-export { answerReCaptchaQuestion };
+export { answerReCaptchaQuestion, CheckAnswerRequest, CheckAnswerResponse };
