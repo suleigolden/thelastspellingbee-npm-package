@@ -103,6 +103,44 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType = 'CHARACTERS', wordL
                 : `1px ${colors[Math.floor(Math.random() * colors.length)]} solid`
         };
     };
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        const lastChar = value[value.length - 1];
+        // Only allow one character at a time (prevent paste)
+        if (value.length > answer.length + 1) {
+            toast({
+                title: 'Warning',
+                description: 'Please type the answer manually',
+                status: 'warning',
+                duration: 2000
+            });
+            return;
+        }
+        // Only allow letters and numbers
+        if (lastChar && /^[a-zA-Z0-9]$/.test(lastChar)) {
+            setAnswer(value.toUpperCase());
+        }
+    };
+    const handleKeyDown = (e) => {
+        // Prevent paste operation
+        if (e.ctrlKey || e.metaKey) {
+            if (e.key === 'v' || e.key === 'V') {
+                e.preventDefault();
+                toast({
+                    title: 'Warning',
+                    description: 'Please type the answer manually',
+                    status: 'warning',
+                    duration: 2000
+                });
+                return;
+            }
+        }
+        // Handle Enter key
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            verifyAnswer();
+        }
+    };
     useEffect(() => {
         fetchQuestion();
     }, []);
@@ -118,12 +156,15 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType = 'CHARACTERS', wordL
                         question.map((char, index) => (React.createElement(Box, Object.assign({ key: index, fontSize: "xl", p: 2, borderRadius: "md", backgroundColor: "white", boxShadow: "sm" }, getStyleProps()), char))),
                         !isVerified && (React.createElement(IconButton, { "aria-label": "Refresh captcha", icon: React.createElement(RepeatIcon, null), size: "sm", onClick: fetchQuestion, ml: 2 })))),
                 isVerified ? (React.createElement(CircleLoader, { loadComplete: true, setLoadComplete: () => { } })) : (React.createElement(React.Fragment, null,
-                    React.createElement(Input, { value: answer, onChange: (e) => setAnswer(e.target.value.toUpperCase()), placeholder: "Enter your answer", size: "lg", onKeyPress: (e) => {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                verifyAnswer();
-                            }
-                        } }),
+                    React.createElement(Input, { value: answer, onChange: handleInputChange, onKeyDown: handleKeyDown, onPaste: (e) => {
+                            e.preventDefault();
+                            toast({
+                                title: 'Warning',
+                                description: 'Please type the answer manually',
+                                status: 'warning',
+                                duration: 2000
+                            });
+                        }, placeholder: "Type your answer", size: "lg", autoComplete: "off", spellCheck: "false" }),
                     React.createElement(Button, { onClick: verifyAnswer, colorScheme: "blue", isLoading: isLoading, width: "full" }, "Verify")))))));
 };
 //# sourceMappingURL=TheLastSpellingBeeReCaptcha.js.map
