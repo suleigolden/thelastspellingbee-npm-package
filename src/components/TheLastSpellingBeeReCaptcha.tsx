@@ -52,7 +52,7 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
             try {
                 const response = await getCaptchaQuestion();
                 if (response.question) {
-                    setRQuestion(splitQuestion(response.question));
+                    setRQuestion(splitQuestion(response[0].question));
                 }
             } catch (error) {
                 console.error(error);

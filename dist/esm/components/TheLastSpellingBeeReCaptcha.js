@@ -50,7 +50,7 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptch
             try {
                 const response = yield getCaptchaQuestion();
                 if (response.question) {
-                    setRQuestion(splitQuestion(response.question));
+                    setRQuestion(splitQuestion(response[0].question));
                 }
             }
             catch (error) {

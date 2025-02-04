@@ -79,7 +79,7 @@ const TheLastSpellingBeeReCaptcha = ({ questionType, wordLength, reCaptchaKey, r
             try {
                 const response = yield getCaptchaQuestion();
                 if (response.question) {
-                    setRQuestion(splitQuestion(response.question));
+                    setRQuestion(splitQuestion(response[0].question));
                 }
             }
             catch (error) {
