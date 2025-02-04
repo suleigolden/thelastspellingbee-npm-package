@@ -16,12 +16,14 @@ exports.answerReCaptchaQuestion = answerReCaptchaQuestion;
 const axios_1 = __importDefault(require("axios"));
 const index_1 = require("../config/index");
 const API_URL = index_1.config.baseUrl.default;
-function answerReCaptchaQuestion(question, answer, apiKey) {
+function answerReCaptchaQuestion(question, answer, apiKey, type, hiddenValue) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const response = yield axios_1.default.post(`${API_URL}answer-re-captcha`, {
+            const response = yield axios_1.default.post(`${API_URL}check-answer`, {
                 question,
-                answer
+                answer,
+                type: type !== null && type !== void 0 ? type : "null",
+                hiddenValue: hiddenValue !== null && hiddenValue !== void 0 ? hiddenValue : 'null'
             }, {
                 headers: {
                     'Content-Type': 'application/json',

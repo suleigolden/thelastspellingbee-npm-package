@@ -10,12 +10,14 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import axios from 'axios';
 import { config } from '../config/index';
 const API_URL = config.baseUrl.default;
-function answerReCaptchaQuestion(question, answer, apiKey) {
+function answerReCaptchaQuestion(question, answer, apiKey, type, hiddenValue) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const response = yield axios.post(`${API_URL}answer-re-captcha`, {
+            const response = yield axios.post(`${API_URL}check-answer`, {
                 question,
-                answer
+                answer,
+                type: type !== null && type !== void 0 ? type : "null",
+                hiddenValue: hiddenValue !== null && hiddenValue !== void 0 ? hiddenValue : 'null'
             }, {
                 headers: {
                     'Content-Type': 'application/json',

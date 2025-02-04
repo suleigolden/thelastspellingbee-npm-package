@@ -140,6 +140,6 @@ If you have any questions or feedback about the package, please don't hesitate t
 
 ## License
 
-Copyright (c) 2023 TheLastSpellingBee
+Copyright (c) 2025 TheLastSpellingBee
 
 MIT (http://www.opensource.org/licenses/mit-license.php)

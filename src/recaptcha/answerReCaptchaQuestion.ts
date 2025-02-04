@@ -1,15 +1,25 @@
 import axios from 'axios';
 import { config } from '../config/index';
+import { QuestionType } from './getReCaptchaQuestion';
 
 const API_URL = config.baseUrl.default;
 
-async function answerReCaptchaQuestion(question: string, answer: string, apiKey: string) {
+async function answerReCaptchaQuestion(
+    question: string, 
+    answer: string, 
+    apiKey: string,
+    type?: QuestionType,
+    hiddenValue?: string
+) {
+
     try {
         const response = await axios.post(
-            `${API_URL}answer-re-captcha`,
+            `${API_URL}check-answer`,
             {
                 question,
-                answer
+                answer,
+                type: type ?? "null",
+                hiddenValue: hiddenValue ?? 'null'
             },
             {
                 headers: {

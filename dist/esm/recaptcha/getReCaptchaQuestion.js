@@ -10,10 +10,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import axios from 'axios';
 import { config } from '../config/index';
 const API_URL = config.baseUrl.default;
+export const QuestionType = [
+    'CHARACTERS',
+    'NUMBERS',
+    'RANDOM',
+    'COMPLEX',
+];
 function getReCaptchaQuestion(questionType, wordLength, apiKey) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const response = yield axios.get(`${API_URL}re-captcha/${questionType}/${wordLength}/${apiKey}`);
+            const response = yield axios.get(`${API_URL}generate/${questionType}/${wordLength}/${apiKey}`);
             return response.data;
         }
         catch (error) {
