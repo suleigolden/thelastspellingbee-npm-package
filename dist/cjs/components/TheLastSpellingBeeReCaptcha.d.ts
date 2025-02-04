@@ -1,10 +1,8 @@
 import { FC } from 'react';
 export type ITheLastSpellingBeeReCaptchaProps = {
-    questionType?: any;
+    questionType?: 'CHARACTERS' | 'NUMBERS' | 'RANDOM' | 'COMPLEX';
     wordLength?: number;
     reCaptchaKey: string;
-    refreshonVerifyReCaptcha?: false;
-    refreshReCaptcha?: false;
-    onVerifyCaptcha: (result: any) => void;
+    onVerifyCaptcha: (verified: boolean) => void;
 };
 export declare const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps>;

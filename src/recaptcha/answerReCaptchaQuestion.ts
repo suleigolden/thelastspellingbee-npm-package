@@ -13,9 +13,7 @@ type CheckAnswerRequest = {
 }
 
 type CheckAnswerResponse = {
-    status: number;
-    message: string;
-    data?: any;
+    verified: boolean;
 }
 
 async function answerReCaptchaQuestion(
@@ -44,7 +42,12 @@ async function answerReCaptchaQuestion(
             }
         );
 
-        return response.data;
+        // sample response:
+        // {
+        //     "verified": true
+        // }
+        return response.data
+       
     } catch (error: any) {
         if (error.response) {
             const errorResponse = error.response.data;

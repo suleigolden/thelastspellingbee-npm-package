@@ -25,6 +25,10 @@ function answerReCaptchaQuestion(question, answer, apiKey, type, hiddenValue) {
                     'Content-Type': 'application/json'
                 }
             });
+            // sample response:
+            // {
+            //     "verified": true
+            // }
             return response.data;
         }
         catch (error) {

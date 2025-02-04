@@ -7,9 +7,7 @@ type CheckAnswerRequest = {
     hiddenValue?: string;
 };
 type CheckAnswerResponse = {
-    status: number;
-    message: string;
-    data?: any;
+    verified: boolean;
 };
 declare function answerReCaptchaQuestion(question: string | number, answer: string | number, apiKey: string, type?: QuestionType, hiddenValue?: string): Promise<CheckAnswerResponse>;
 export { answerReCaptchaQuestion, CheckAnswerRequest, CheckAnswerResponse };
