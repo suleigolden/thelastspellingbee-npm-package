@@ -135,7 +135,7 @@ The component includes built-in error handling with user-friendly toast notifica
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](https://github.com/suleigolden/thelastspellingbee-npm-package/CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guide](./CONTRIBUTING.md) for details.
 
 ## License
 
