@@ -133,17 +133,9 @@ The component includes built-in error handling with user-friendly toast notifica
 3. Generate your API key
 4. Use the key in your application
 
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers
-
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](https://github.com/suleigolden/thelastspellingbee-npm-package/blob/main/CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guide](https://github.com/suleigolden/thelastspellingbee-npm-package/CONTRIBUTING.md) for details.
 
 ## License
 
@@ -152,9 +144,14 @@ MIT © [TheLastSpellingBee](https://thelastspellingbee.com)
 ## Support
 
 - Documentation: [Full API Reference](https://thelastspellingbee.com/api-reference)
-- Issues: [GitHub Issues](https://github.com/suleigolden/thelastspellingbee-npm-package/issues)
-- Email: support@thelastspellingbee.com
+- [https://thelastspellingbee.com/contact-us](https://thelastspellingbee.com/contact-us)
 
-## Changelog
+## Credits
 
-See [CHANGELOG.md](https://github.com/suleigolden/thelastspellingbee-npm-package/blob/main/CHANGELOG.md) for release history.
+- [TheLastSpellingBee](https://thelastspellingbee.com)
+- [Sulei Golden](https://github.com/suleigolden)
+- [Chakra UI](https://chakra-ui.com)
+- [React](https://reactjs.org)
+- [Typescript](https://www.typescriptlang.org)
+- [Vite](https://vitejs.dev)
+- [Vercel](https://vercel.com)
