@@ -20,19 +20,36 @@ export type ITheLastSpellingBeeReCaptchaProps = {
     wordLength?: number;
     reCaptchaKey: string;
     onVerifyCaptcha: (verified: boolean) => void;
+    isDarkMode?: boolean;
+    /**
+     * Optional custom background color used when `isDarkMode` is true.
+     * Defaults to `#0b1437` if not provided.
+     */
+    darkModeColor?: string;
 };
 
 export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> = ({ 
     questionType = 'CHARACTERS',
     wordLength = 3,
     reCaptchaKey,
-    onVerifyCaptcha 
+    onVerifyCaptcha,
+    isDarkMode = false,
+    darkModeColor
 }) => {
     const [answer, setAnswer] = useState('');
     const [question, setQuestion] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isVerified, setIsVerified] = useState(false);
     const toast = useToast();
+
+    const isDark = isDarkMode;
+    const containerBg = isDark ? (darkModeColor || '#0b1437') : 'white';
+    const textColor = isDark ? 'whiteAlpha.900' : 'gray.800';
+    const subTextColor = isDark ? 'blue.200' : 'blue.500';
+    const captchaBoxBg = isDark ? 'whiteAlpha.100' : 'white';
+    const inputBg = isDark ? 'whiteAlpha.200' : 'white';
+    const inputColor = isDark ? 'whiteAlpha.900' : 'gray.800';
+    const borderColor = isDark ? 'whiteAlpha.300' : 'gray.200';
 
     const fetchQuestion = async () => {
         if (!reCaptchaKey) {
@@ -186,7 +203,8 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
             p={6} 
             borderRadius="lg" 
             boxShadow="sm" 
-            bg="white"
+            bg={containerBg}
+            color={textColor}
             width="100%"
             maxW="400px"
         >
@@ -194,7 +212,7 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                 <VStack spacing={4} align="stretch">
                     <FormLabel fontWeight="bold">
                         <Text>I'm not a robot</Text>
-                        <Text color="blue.500" fontSize="sm">
+                        <Text color={subTextColor} fontSize="sm">
                             TheLastSpellingBee Re-Captcha
                         </Text>
                     </FormLabel>
@@ -211,7 +229,7 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                                     fontSize="xl"
                                     p={2}
                                     borderRadius="md"
-                                    backgroundColor="white"
+                                    backgroundColor={captchaBoxBg}
                                     boxShadow="sm"
                                     {...getStyleProps()}
                                 >
@@ -253,13 +271,16 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                                 }}
                                 placeholder="Type your answer"
                                 size="lg"
+                                bg={inputBg}
+                                color={inputColor}
+                                borderColor={borderColor}
                                 autoComplete="off"
                                 spellCheck="false"
                             />
                             
                             <Button
                                 onClick={verifyAnswer}
-                                colorScheme="blue"
+                                colorScheme={isDark ? 'teal' : 'blue'}
                                 isLoading={isLoading}
                                 width="full"
                             >

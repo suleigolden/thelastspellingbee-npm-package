@@ -58,6 +58,8 @@ function MyForm() {
 | `questionType` | `'CHARACTERS' \| 'NUMBERS' \| 'RANDOM' \| 'COMPLEX'` | `'CHARACTERS'` | Type of question to display |
 | `wordLength` | `number` | `3` | Length of the word/answer |
 | `onVerifyCaptcha` | `(verified: boolean) => void` | Required | Callback function called after verification |
+| `isDarkMode` | `boolean` | `false` | Enables dark mode styling for the widget |
+| `darkModeColor` | `string` | `'#0b1437'` | Custom background color used when `isDarkMode` is `true` |
 
 ### Question Types
 
@@ -114,6 +116,21 @@ function MyForm() {
             // Handle failed verification
         }
     }}
+/>
+```
+
+### Dark Mode Example
+```jsx
+<TheLastSpellingBeeReCaptcha
+    reCaptchaKey="your-api-key"
+    onVerifyCaptcha={(verified) => {
+        if (verified) {
+            // Handle successful verification
+        }
+    }}
+    isDarkMode={true}
+    // Optional: provide your own dark background color
+    darkModeColor="#101827"
 />
 ```
 

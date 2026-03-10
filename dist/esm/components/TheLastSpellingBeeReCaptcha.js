@@ -12,12 +12,20 @@ import { getReCaptchaQuestion, answerReCaptchaQuestion } from '../recaptcha';
 import { Box, FormControl, FormLabel, Button, Text, Flex, IconButton, Input, useToast, VStack } from '@chakra-ui/react';
 import { RepeatIcon } from '@chakra-ui/icons';
 import CircleLoader from './CircleLoader';
-export const TheLastSpellingBeeReCaptcha = ({ questionType = 'CHARACTERS', wordLength = 3, reCaptchaKey, onVerifyCaptcha }) => {
+export const TheLastSpellingBeeReCaptcha = ({ questionType = 'CHARACTERS', wordLength = 3, reCaptchaKey, onVerifyCaptcha, isDarkMode = false, darkModeColor }) => {
     const [answer, setAnswer] = useState('');
     const [question, setQuestion] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isVerified, setIsVerified] = useState(false);
     const toast = useToast();
+    const isDark = isDarkMode;
+    const containerBg = isDark ? (darkModeColor || '#0b1437') : 'white';
+    const textColor = isDark ? 'whiteAlpha.900' : 'gray.800';
+    const subTextColor = isDark ? 'blue.200' : 'blue.500';
+    const captchaBoxBg = isDark ? 'whiteAlpha.100' : 'white';
+    const inputBg = isDark ? 'whiteAlpha.200' : 'white';
+    const inputColor = isDark ? 'whiteAlpha.900' : 'gray.800';
+    const borderColor = isDark ? 'whiteAlpha.300' : 'gray.200';
     const fetchQuestion = () => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
         if (!reCaptchaKey) {
@@ -144,16 +152,16 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType = 'CHARACTERS', wordL
     useEffect(() => {
         fetchQuestion();
     }, []);
-    return (React.createElement(VStack, { spacing: 4, p: 6, borderRadius: "lg", boxShadow: "sm", bg: "white", width: "100%", maxW: "400px" },
+    return (React.createElement(VStack, { spacing: 4, p: 6, borderRadius: "lg", boxShadow: "sm", bg: containerBg, color: textColor, width: "100%", maxW: "400px" },
         React.createElement(FormControl, null,
             React.createElement(VStack, { spacing: 4, align: "stretch" },
                 React.createElement(FormLabel, { fontWeight: "bold" },
                     React.createElement(Text, null, "I'm not a robot"),
-                    React.createElement(Text, { color: "blue.500", fontSize: "sm" }, "TheLastSpellingBee Re-Captcha")),
+                    React.createElement(Text, { color: subTextColor, fontSize: "sm" }, "TheLastSpellingBee Re-Captcha")),
                 React.createElement(Box, null,
                     React.createElement(Text, { fontWeight: "bold", mb: 2 }, "IF A = 1, B = 2, 1 = A, 2 = B. What is"),
                     React.createElement(Flex, { align: "center", wrap: "wrap", gap: 2 },
-                        question.map((char, index) => (React.createElement(Box, Object.assign({ key: index, fontSize: "xl", p: 2, borderRadius: "md", backgroundColor: "white", boxShadow: "sm" }, getStyleProps()), char))),
+                        question.map((char, index) => (React.createElement(Box, Object.assign({ key: index, fontSize: "xl", p: 2, borderRadius: "md", backgroundColor: captchaBoxBg, boxShadow: "sm" }, getStyleProps()), char))),
                         !isVerified && (React.createElement(IconButton, { "aria-label": "Refresh captcha", icon: React.createElement(RepeatIcon, null), size: "sm", onClick: fetchQuestion, ml: 2 })))),
                 isVerified ? (React.createElement(CircleLoader, { loadComplete: true, setLoadComplete: () => { } })) : (React.createElement(React.Fragment, null,
                     React.createElement(Input, { value: answer, onChange: handleInputChange, onKeyDown: handleKeyDown, onPaste: (e) => {
@@ -164,7 +172,7 @@ export const TheLastSpellingBeeReCaptcha = ({ questionType = 'CHARACTERS', wordL
                                 status: 'warning',
                                 duration: 2000
                             });
-                        }, placeholder: "Type your answer", size: "lg", autoComplete: "off", spellCheck: "false" }),
-                    React.createElement(Button, { onClick: verifyAnswer, colorScheme: "blue", isLoading: isLoading, width: "full" }, "Verify")))))));
+                        }, placeholder: "Type your answer", size: "lg", bg: inputBg, color: inputColor, borderColor: borderColor, autoComplete: "off", spellCheck: "false" }),
+                    React.createElement(Button, { onClick: verifyAnswer, colorScheme: isDark ? 'teal' : 'blue', isLoading: isLoading, width: "full" }, "Verify")))))));
 };
 //# sourceMappingURL=TheLastSpellingBeeReCaptcha.js.map
