@@ -1,18 +1,5 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState, useCallback } from 'react';
 import { getReCaptchaQuestion, answerReCaptchaQuestion } from '../recaptcha';
-import { 
-    Box, 
-    FormControl, 
-    FormLabel, 
-    Button, 
-    Text, 
-    Flex, 
-    IconButton,
-    Input,
-    useToast,
-    VStack
-} from '@chakra-ui/react';
-import { RepeatIcon } from '@chakra-ui/icons';
 import CircleLoader from './CircleLoader';
 
 export type ITheLastSpellingBeeReCaptchaProps = {
@@ -28,7 +15,25 @@ export type ITheLastSpellingBeeReCaptchaProps = {
     darkModeColor?: string;
 };
 
-export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> = ({ 
+type ToastStatus = 'error' | 'warning' | 'success';
+type ToastState = { title: string; description?: string; status: ToastStatus } | null;
+
+const CHAR_COLORS = [
+    '#ff6347', '#4682b4', '#6a5acd', '#008080',
+    '#a6d9fd', '#73c2fb', '#F26B3A', '#db7093',
+    '#ffa07a', '#9acd32'
+];
+
+function RefreshIcon() {
+    return (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+            <path d="M23 4v6h-6M1 20v-6h6" />
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
+        </svg>
+    );
+}
+
+export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> = ({
     questionType = 'CHARACTERS',
     wordLength = 3,
     reCaptchaKey,
@@ -40,40 +45,43 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
     const [question, setQuestion] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isVerified, setIsVerified] = useState(false);
-    const toast = useToast();
+    const [toast, setToast] = useState<ToastState>(null);
 
     const isDark = isDarkMode;
-    const containerBg = isDark ? (darkModeColor || '#0b1437') : 'white';
-    const textColor = isDark ? 'whiteAlpha.900' : 'gray.800';
-    const subTextColor = isDark ? 'blue.200' : 'blue.500';
-    const captchaBoxBg = isDark ? 'whiteAlpha.100' : 'white';
-    const inputBg = isDark ? 'whiteAlpha.200' : 'white';
-    const inputColor = isDark ? 'whiteAlpha.900' : 'gray.800';
-    const borderColor = isDark ? 'whiteAlpha.300' : 'gray.200';
+    const containerBg = isDark ? (darkModeColor || '#0b1437') : '#ffffff';
+    const themeVars: React.CSSProperties = isDark
+        ? {
+            ['--tlsb-bg' as string]: containerBg,
+            ['--tlsb-text' as string]: 'rgba(255,255,255,0.92)',
+            ['--tlsb-subtext' as string]: '#90cdf4',
+            ['--tlsb-input-bg' as string]: 'rgba(255,255,255,0.12)',
+            ['--tlsb-input-border' as string]: 'rgba(255,255,255,0.2)',
+            ['--tlsb-input-text' as string]: 'rgba(255,255,255,0.92)',
+            ['--tlsb-captcha-box-bg' as string]: 'rgba(255,255,255,0.08)',
+            ['--tlsb-btn-bg' as string]: '#319795',
+            ['--tlsb-btn-hover' as string]: '#2c7a7b',
+          }
+        : {};
+
+    const showToast = useCallback((title: string, description?: string, status: ToastStatus = 'error') => {
+        setToast({ title, description, status });
+        const duration = status === 'warning' ? 2000 : 3000;
+        const t = setTimeout(() => setToast(null), duration);
+        return () => clearTimeout(t);
+    }, []);
 
     const fetchQuestion = async () => {
         if (!reCaptchaKey) {
-            toast({
-                title: 'Error',
-                description: 'ReCaptcha key not provided',
-                status: 'error',
-                duration: 3000
-            });
+            showToast('Error', 'ReCaptcha key not provided', 'error');
             return;
         }
-
         try {
             const response = await getReCaptchaQuestion(questionType, wordLength, reCaptchaKey);
             if (response[0]?.question) {
                 setQuestion(parseQuestion(response[0].question));
             }
-        } catch (error) {
-            toast({
-                title: 'Error',
-                description: 'Failed to fetch question',
-                status: 'error',
-                duration: 3000
-            });
+        } catch {
+            showToast('Error', 'Failed to fetch question', 'error');
         }
     };
 
@@ -81,7 +89,6 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
         const hasAlphaNumeric = /^(?=.*[a-zA-Z])(?=.*[0-9])/.test(
             input.replace(/[^\w\s]/gi, '')
         );
-        
         if (hasAlphaNumeric) return input.split('-');
         if (/[a-zA-Z]/.test(input)) return input.split('');
         return input.split('-');
@@ -89,104 +96,63 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
 
     const verifyAnswer = async () => {
         if (!answer.trim()) {
-            toast({
-                title: 'Error',
-                description: 'Please enter an answer',
-                status: 'warning',
-                duration: 3000
-            });
+            showToast('Error', 'Please enter an answer', 'warning');
             return;
         }
-
         setIsLoading(true);
-
         try {
             const formattedQuestion = question.join(
-                /^\d/.test(question[0]) ? '-' : ''
+                /^\d/.test(question[0] ?? '') ? '-' : ''
             );
-
             const result = await answerReCaptchaQuestion(
                 formattedQuestion,
                 answer,
                 reCaptchaKey
             );
-
             setIsVerified(result.verified);
             onVerifyCaptcha(result.verified);
-
             if (!result.verified) {
-                toast({
-                    title: 'Incorrect Answer',
-                    description: 'Please try again',
-                    status: 'error',
-                    duration: 3000
-                });
+                showToast('Incorrect Answer', 'Please try again', 'error');
                 setAnswer('');
             }
-        } catch (error) {
-            toast({
-                title: 'Error',
-                description: 'Verification failed',
-                status: 'error',
-                duration: 3000
-            });
+        } catch {
+            showToast('Error', 'Verification failed', 'error');
         } finally {
             setIsLoading(false);
         }
     };
 
-    const getStyleProps = () => {
-        const colors = [
-            '#ff6347', '#4682b4', '#6a5acd', '#008080',
-            '#a6d9fd', '#73c2fb', '#F26B3A', '#db7093',
-            '#ffa07a', '#9acd32'
-        ];
-        
+    const getCharStyle = (): React.CSSProperties => {
+        const color = CHAR_COLORS[Math.floor(Math.random() * CHAR_COLORS.length)];
+        const borderColor = CHAR_COLORS[Math.floor(Math.random() * CHAR_COLORS.length)];
         return {
-            color: colors[Math.floor(Math.random() * colors.length)],
-            border: Math.random() >= 0.5 
-                ? `2px dotted ${colors[Math.floor(Math.random() * colors.length)]}` 
-                : `1px ${colors[Math.floor(Math.random() * colors.length)]} solid`
+            color,
+            border: Math.random() >= 0.5
+                ? `2px dotted ${borderColor}`
+                : `1px solid ${borderColor}`
         };
     };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
         const lastChar = value[value.length - 1];
-        
-        // Only allow one character at a time (prevent paste)
         if (value.length > answer.length + 1) {
-            toast({
-                title: 'Warning',
-                description: 'Please type the answer manually',
-                status: 'warning',
-                duration: 2000
-            });
+            showToast('Warning', 'Please type the answer manually', 'warning');
             return;
         }
-
-        // Only allow letters and numbers
         if (lastChar && /^[a-zA-Z0-9]$/.test(lastChar)) {
             setAnswer(value.toUpperCase());
         }
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        // Prevent paste operation
         if (e.ctrlKey || e.metaKey) {
             if (e.key === 'v' || e.key === 'V') {
                 e.preventDefault();
-                toast({
-                    title: 'Warning',
-                    description: 'Please type the answer manually',
-                    status: 'warning',
-                    duration: 2000
-                });
+                showToast('Warning', 'Please type the answer manually', 'warning');
                 return;
             }
         }
-
-        // Handle Enter key
         if (e.key === 'Enter') {
             e.preventDefault();
             verifyAnswer();
@@ -198,98 +164,88 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
     }, []);
 
     return (
-        <VStack 
-            spacing={4} 
-            p={6} 
-            borderRadius="lg" 
-            boxShadow="sm" 
-            bg={containerBg}
-            color={textColor}
-            width="100%"
-            maxW="400px"
-        >
-            <FormControl>
-                <VStack spacing={4} align="stretch">
-                    <FormLabel fontWeight="bold">
-                        <Text>I'm not a robot</Text>
-                        <Text color={subTextColor} fontSize="sm">
-                            TheLastSpellingBee Re-Captcha
-                        </Text>
-                    </FormLabel>
+        <>
+            <div
+                className="tlsb-recaptcha"
+                style={themeVars}
+                role="form"
+                aria-label="TheLastSpellingBee ReCaptcha"
+            >
+                <div className="tlsb-recaptcha__form">
+                    <header className="tlsb-recaptcha__header">
+                        <h2 className="tlsb-recaptcha__title">I'm not a robot</h2>
+                        <p className="tlsb-recaptcha__subtitle">TheLastSpellingBee Re-Captcha</p>
+                    </header>
 
-                    <Box>
-                        <Text fontWeight="bold" mb={2}>
-                            IF A = 1, B = 2, 1 = A, 2 = B. What is
-                        </Text>
-                        
-                        <Flex align="center" wrap="wrap" gap={2}>
-                            {question.map((char, index) => (
-                                <Box
-                                    key={index}
-                                    fontSize="xl"
-                                    p={2}
-                                    borderRadius="md"
-                                    backgroundColor={captchaBoxBg}
-                                    boxShadow="sm"
-                                    {...getStyleProps()}
-                                >
-                                    {char}
-                                </Box>
-                            ))}
-                            
-                            {!isVerified && (
-                                <IconButton
-                                    aria-label="Refresh captcha"
-                                    icon={<RepeatIcon />}
-                                    size="sm"
-                                    onClick={fetchQuestion}
-                                    ml={2}
-                                />
-                            )}
-                        </Flex>
-                    </Box>
+                    <p className="tlsb-recaptcha__instruction">
+                        IF A = 1, B = 2, 1 = A, 2 = B. What is
+                    </p>
+
+                    <div className="tlsb-recaptcha__chars">
+                        {question.map((char, index) => (
+                            <span
+                                key={index}
+                                className="tlsb-recaptcha__char"
+                                style={getCharStyle()}
+                            >
+                                {char}
+                            </span>
+                        ))}
+                        {!isVerified && (
+                            <button
+                                type="button"
+                                className="tlsb-recaptcha__refresh"
+                                onClick={fetchQuestion}
+                                aria-label="Refresh captcha"
+                            >
+                                <RefreshIcon />
+                            </button>
+                        )}
+                    </div>
 
                     {isVerified ? (
-                        <CircleLoader 
-                            loadComplete={true} 
-                            setLoadComplete={() => {}} 
-                        />
+                        <div className="tlsb-recaptcha__loader">
+                            <CircleLoader loadComplete={true} setLoadComplete={() => {}} />
+                        </div>
                     ) : (
                         <>
-                            <Input
+                            <input
+                                type="text"
+                                className="tlsb-recaptcha__input"
                                 value={answer}
                                 onChange={handleInputChange}
                                 onKeyDown={handleKeyDown}
                                 onPaste={(e) => {
                                     e.preventDefault();
-                                    toast({
-                                        title: 'Warning',
-                                        description: 'Please type the answer manually',
-                                        status: 'warning',
-                                        duration: 2000
-                                    });
+                                    showToast('Warning', 'Please type the answer manually', 'warning');
                                 }}
                                 placeholder="Type your answer"
-                                size="lg"
-                                bg={inputBg}
-                                color={inputColor}
-                                borderColor={borderColor}
                                 autoComplete="off"
-                                spellCheck="false"
+                                spellCheck={false}
+                                aria-label="Your answer"
                             />
-                            
-                            <Button
+                            <button
+                                type="button"
+                                className="tlsb-recaptcha__btn"
                                 onClick={verifyAnswer}
-                                colorScheme={isDark ? 'teal' : 'blue'}
-                                isLoading={isLoading}
-                                width="full"
+                                disabled={isLoading}
                             >
-                                Verify
-                            </Button>
+                                {isLoading ? 'Verifying…' : 'Verify'}
+                            </button>
                         </>
                     )}
-                </VStack>
-            </FormControl>
-        </VStack>
+                </div>
+            </div>
+
+            {toast && (
+                <div
+                    className={`tlsb-recaptcha__toast tlsb-recaptcha__toast--${toast.status}`}
+                    role="alert"
+                >
+                    <strong>{toast.title}</strong>
+                    {toast.description && ` — ${toast.description}`}
+                </div>
+            )}
+        </>
     );
 };

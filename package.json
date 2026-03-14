@@ -8,10 +8,12 @@
         "dist"
     ],
     "scripts": {
-        "build": "rm -rf dist/ && npm run build:esm && npm run build:cjs",
+        "build": "rm -rf dist/ && npm run build:esm && npm run build:cjs && npm run copy:css",
         "build:esm": "tsc",
-        "build:cjs": "tsc --module CommonJS --outDir dist/cjs"
+        "build:cjs": "tsc --module CommonJS --outDir dist/cjs",
+        "copy:css": "cp src/components/TheLastSpellingBeeReCaptcha.css dist/esm/components/ && cp src/components/TheLastSpellingBeeReCaptcha.css dist/cjs/components/ && cp src/components/TheLastSpellingBeeReCaptcha.css dist/the-last-spelling-bee-re-captcha.css"
     },
+    "style": "dist/the-last-spelling-bee-re-captcha.css",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/suleigolden/thelastspellingbee-npm-package.git"
@@ -35,11 +37,6 @@
         "react-dom": "^18.2.0"
     },
     "dependencies": {
-        "@chakra-ui/icons": "^2.1.1",
-        "@chakra-ui/react": "^2.8.2",
-        "@emotion/react": "^11.11.3",
-        "@emotion/styled": "^11.11.0",
-        "axios": "^1.4.0",
-        "framer-motion": "^11.0.3"
+        "axios": "^1.4.0"
     }
 }

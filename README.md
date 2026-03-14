@@ -8,7 +8,7 @@ A modern, user-friendly CAPTCHA component for React applications that uses spell
 ## Features
 
 - 🔒 Secure character-based verification
-- 🎨 Modern, responsive UI with Chakra UI
+- 🎨 Framework-agnostic styling—custom CSS, works in any React project
 - 🌈 Dynamic color schemes
 - ⌨️ Anti-paste protection
 - ♿ Accessibility support
@@ -29,8 +29,12 @@ yarn add the-last-spelling-bee-re-captcha
 
 ## Quick Start
 
+Import the component **and** the styles (required) in your app:
+
 ```jsx
 import { TheLastSpellingBeeReCaptcha } from 'the-last-spelling-bee-re-captcha';
+// Import the default styles (required for layout and theming)
+import 'the-last-spelling-bee-re-captcha/dist/the-last-spelling-bee-re-captcha.css';
 
 function MyForm() {
     const handleVerification = (verified) => {
@@ -47,6 +51,8 @@ function MyForm() {
     );
 }
 ```
+
+The package ships with a single, scoped CSS file (no other UI libraries). You can override the look with your own CSS by targeting the `.tlsb-recaptcha` class.
 
 ## API Reference
 
@@ -134,6 +140,16 @@ function MyForm() {
 />
 ```
 
+## Styling
+
+The component uses a single, scoped CSS file with no external UI dependencies. Always import it once in your app:
+
+```js
+import 'the-last-spelling-bee-re-captcha/dist/the-last-spelling-bee-re-captcha.css';
+```
+
+All styles are scoped under the `.tlsb-recaptcha` class, so they won’t conflict with your app. You can override variables or classes in your own CSS. The layout is responsive and mobile-friendly.
+
 ## Error Handling
 
 The component includes built-in error handling with user-friendly toast notifications for:
@@ -167,7 +183,6 @@ MIT © [TheLastSpellingBee](https://thelastspellingbee.com)
 
 - [TheLastSpellingBee](https://thelastspellingbee.com)
 - [Sulei Golden](https://github.com/suleigolden)
-- [Chakra UI](https://chakra-ui.com)
 - [React](https://reactjs.org)
 - [Typescript](https://www.typescriptlang.org)
 - [Vite](https://vitejs.dev)
