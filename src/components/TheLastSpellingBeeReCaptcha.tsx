@@ -1,7 +1,6 @@
 import React, { FC, useEffect, useState, useCallback } from 'react';
 import { getReCaptchaQuestion, answerReCaptchaQuestion } from '../recaptcha';
 import CircleLoader from './CircleLoader';
-import './TheLastSpellingBeeReCaptcha.css';
 
 export type ITheLastSpellingBeeReCaptchaProps = {
     questionType?: 'CHARACTERS' | 'NUMBERS' | 'RANDOM' | 'COMPLEX';
@@ -25,9 +24,19 @@ const CHAR_COLORS = [
     '#ffa07a', '#9acd32'
 ];
 
+const KEYFRAMES_STYLE = `
+@keyframes loader-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes checkmark {
+  0% { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: 0; }
+}
+`;
+
 function RefreshIcon() {
     return (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden style={{ width: 16, height: 16 }}>
             <path d="M23 4v6h-6M1 20v-6h6" />
             <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" />
         </svg>
@@ -47,22 +56,23 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
     const [isLoading, setIsLoading] = useState(false);
     const [isVerified, setIsVerified] = useState(false);
     const [toast, setToast] = useState<ToastState>(null);
+    const [hoverRefresh, setHoverRefresh] = useState(false);
+    const [hoverBtn, setHoverBtn] = useState(false);
+    const [focusInput, setFocusInput] = useState(false);
 
     const isDark = isDarkMode;
     const containerBg = isDark ? (darkModeColor || '#0b1437') : '#ffffff';
-    const themeVars: React.CSSProperties = isDark
-        ? {
-            ['--tlsb-bg' as string]: containerBg,
-            ['--tlsb-text' as string]: 'rgba(255,255,255,0.92)',
-            ['--tlsb-subtext' as string]: '#90cdf4',
-            ['--tlsb-input-bg' as string]: 'rgba(255,255,255,0.12)',
-            ['--tlsb-input-border' as string]: 'rgba(255,255,255,0.2)',
-            ['--tlsb-input-text' as string]: 'rgba(255,255,255,0.92)',
-            ['--tlsb-captcha-box-bg' as string]: 'rgba(255,255,255,0.08)',
-            ['--tlsb-btn-bg' as string]: '#319795',
-            ['--tlsb-btn-hover' as string]: '#2c7a7b',
-          }
-        : {};
+    const textColor = isDark ? 'rgba(255,255,255,0.92)' : '#1a202c';
+    const subtextColor = isDark ? '#90cdf4' : '#3182ce';
+    const inputBg = isDark ? 'rgba(255,255,255,0.12)' : '#ffffff';
+    const inputBorder = isDark ? 'rgba(255,255,255,0.2)' : '#e2e8f0';
+    const captchaBoxBg = isDark ? 'rgba(255,255,255,0.08)' : '#f7fafc';
+    const btnBg = isDark ? '#319795' : '#3182ce';
+    const btnHoverBg = isDark ? '#2c7a7b' : '#2c5282';
+    const shadow = '0 1px 2px 0 rgba(0, 0, 0, 0.05)';
+    const radius = 8;
+    const radiusSm = 6;
+    const fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
 
     const showToast = useCallback((title: string, description?: string, status: ToastStatus = 'error') => {
         setToast({ title, description, status });
@@ -130,7 +140,15 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
             color,
             border: Math.random() >= 0.5
                 ? `2px dotted ${borderColor}`
-                : `1px solid ${borderColor}`
+                : `1px solid ${borderColor}`,
+            fontSize: 20,
+            padding: '8px 10px',
+            borderRadius: radiusSm,
+            background: captchaBoxBg,
+            boxShadow: shadow,
+            minWidth: 36,
+            textAlign: 'center' as const,
+            fontWeight: 600,
         };
     };
 
@@ -164,29 +182,150 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
         fetchQuestion();
     }, []);
 
+    const containerStyle: React.CSSProperties = {
+        boxSizing: 'border-box',
+        width: '100%',
+        maxWidth: 400,
+        padding: 24,
+        background: containerBg,
+        color: textColor,
+        borderRadius: radius,
+        boxShadow: shadow,
+        fontFamily,
+        fontSize: 16,
+    };
+
+    const formStyle: React.CSSProperties = {
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
+    };
+
+    const headerStyle: React.CSSProperties = {
+        marginBottom: 16,
+    };
+
+    const titleStyle: React.CSSProperties = {
+        fontWeight: 700,
+        margin: '0 0 4px 0',
+        fontSize: 16,
+        lineHeight: 1.4,
+    };
+
+    const subtitleStyle: React.CSSProperties = {
+        fontSize: 14,
+        color: subtextColor,
+        margin: 0,
+    };
+
+    const instructionStyle: React.CSSProperties = {
+        fontWeight: 600,
+        margin: '0 0 8px 0',
+        fontSize: 15,
+    };
+
+    const charsStyle: React.CSSProperties = {
+        display: 'flex',
+        flexWrap: 'wrap' as const,
+        alignItems: 'center',
+        gap: 8,
+        marginBottom: 16,
+    };
+
+    const refreshStyle: React.CSSProperties = {
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 32,
+        height: 32,
+        padding: 0,
+        border: `1px solid ${hoverRefresh ? subtextColor : inputBorder}`,
+        borderRadius: radiusSm,
+        background: hoverRefresh ? captchaBoxBg : inputBg,
+        color: textColor,
+        cursor: 'pointer',
+        flexShrink: 0,
+    };
+
+    const inputStyle: React.CSSProperties = {
+        width: '100%',
+        padding: '12px 16px',
+        fontSize: 16,
+        lineHeight: 1.5,
+        color: textColor,
+        background: inputBg,
+        border: `1px solid ${focusInput ? subtextColor : inputBorder}`,
+        borderRadius: radiusSm,
+        marginBottom: 16,
+        boxSizing: 'border-box',
+        outline: focusInput ? `2px solid ${subtextColor}` : 'none',
+        outlineOffset: 2,
+    };
+
+    const btnStyle: React.CSSProperties = {
+        width: '100%',
+        padding: '12px 16px',
+        fontSize: 16,
+        fontWeight: 600,
+        lineHeight: 1.5,
+        color: '#ffffff',
+        background: (hoverBtn && !isLoading) ? btnHoverBg : btnBg,
+        border: 'none',
+        borderRadius: radiusSm,
+        cursor: isLoading ? 'not-allowed' : 'pointer',
+        opacity: isLoading ? 0.7 : 1,
+    };
+
+    const loaderWrapStyle: React.CSSProperties = {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: '8px 0',
+    };
+
+    const toastBaseStyle: React.CSSProperties = {
+        position: 'fixed',
+        bottom: 24,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        maxWidth: 'calc(100vw - 32px)',
+        padding: '12px 20px',
+        borderRadius: radiusSm,
+        fontSize: 14,
+        fontWeight: 500,
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        zIndex: 9999,
+    };
+
+    const toastStyle: React.CSSProperties =
+        toast?.status === 'error'
+            ? { ...toastBaseStyle, background: '#fff5f5', color: '#c53030', border: '1px solid #feb2b2' }
+            : toast?.status === 'warning'
+            ? { ...toastBaseStyle, background: '#fffaf0', color: '#c05621', border: '1px solid #fbd38d' }
+            : { ...toastBaseStyle, background: '#f0fff4', color: '#276749', border: '1px solid #9ae6b4' };
+
     return (
         <>
+            <style>{KEYFRAMES_STYLE}</style>
             <div
-                className="tlsb-recaptcha"
-                style={themeVars}
+                style={containerStyle}
                 role="form"
                 aria-label="TheLastSpellingBee ReCaptcha"
             >
-                <div className="tlsb-recaptcha__form">
-                    <header className="tlsb-recaptcha__header">
-                        <h2 className="tlsb-recaptcha__title">I'm not a robot</h2>
-                        <p className="tlsb-recaptcha__subtitle">TheLastSpellingBee Re-Captcha</p>
+                <div style={formStyle}>
+                    <header style={headerStyle}>
+                        <h2 style={titleStyle}>I'm not a robot</h2>
+                        <p style={subtitleStyle}>TheLastSpellingBee Re-Captcha</p>
                     </header>
 
-                    <p className="tlsb-recaptcha__instruction">
+                    <p style={instructionStyle}>
                         IF A = 1, B = 2, 1 = A, 2 = B. What is
                     </p>
 
-                    <div className="tlsb-recaptcha__chars">
+                    <div style={charsStyle}>
                         {question.map((char, index) => (
                             <span
                                 key={index}
-                                className="tlsb-recaptcha__char"
                                 style={getCharStyle()}
                             >
                                 {char}
@@ -195,8 +334,10 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                         {!isVerified && (
                             <button
                                 type="button"
-                                className="tlsb-recaptcha__refresh"
+                                style={refreshStyle}
                                 onClick={fetchQuestion}
+                                onMouseEnter={() => setHoverRefresh(true)}
+                                onMouseLeave={() => setHoverRefresh(false)}
                                 aria-label="Refresh captcha"
                             >
                                 <RefreshIcon />
@@ -205,17 +346,19 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                     </div>
 
                     {isVerified ? (
-                        <div className="tlsb-recaptcha__loader">
+                        <div style={loaderWrapStyle}>
                             <CircleLoader loadComplete={true} setLoadComplete={() => {}} />
                         </div>
                     ) : (
                         <>
                             <input
                                 type="text"
-                                className="tlsb-recaptcha__input"
+                                style={inputStyle}
                                 value={answer}
                                 onChange={handleInputChange}
                                 onKeyDown={handleKeyDown}
+                                onFocus={() => setFocusInput(true)}
+                                onBlur={() => setFocusInput(false)}
                                 onPaste={(e) => {
                                     e.preventDefault();
                                     showToast('Warning', 'Please type the answer manually', 'warning');
@@ -227,9 +370,11 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
                             />
                             <button
                                 type="button"
-                                className="tlsb-recaptcha__btn"
+                                style={btnStyle}
                                 onClick={verifyAnswer}
                                 disabled={isLoading}
+                                onMouseEnter={() => setHoverBtn(true)}
+                                onMouseLeave={() => setHoverBtn(false)}
                             >
                                 {isLoading ? 'Verifying…' : 'Verify'}
                             </button>
@@ -239,10 +384,7 @@ export const TheLastSpellingBeeReCaptcha: FC<ITheLastSpellingBeeReCaptchaProps> 
             </div>
 
             {toast && (
-                <div
-                    className={`tlsb-recaptcha__toast tlsb-recaptcha__toast--${toast.status}`}
-                    role="alert"
-                >
+                <div style={toastStyle} role="alert">
                     <strong>{toast.title}</strong>
                     {toast.description && ` — ${toast.description}`}
                 </div>
