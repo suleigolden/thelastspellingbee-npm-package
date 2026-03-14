@@ -39,6 +39,7 @@ exports.TheLastSpellingBeeReCaptcha = void 0;
 const react_1 = __importStar(require("react"));
 const recaptcha_1 = require("../recaptcha");
 const CircleLoader_1 = __importDefault(require("./CircleLoader"));
+require("./TheLastSpellingBeeReCaptcha.css");
 const CHAR_COLORS = [
     '#ff6347', '#4682b4', '#6a5acd', '#008080',
     '#a6d9fd', '#73c2fb', '#F26B3A', '#db7093',

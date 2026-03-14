@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useState, useCallback } from 'react';
 import { getReCaptchaQuestion, answerReCaptchaQuestion } from '../recaptcha';
 import CircleLoader from './CircleLoader';
+import './TheLastSpellingBeeReCaptcha.css';
 
 export type ITheLastSpellingBeeReCaptchaProps = {
     questionType?: 'CHARACTERS' | 'NUMBERS' | 'RANDOM' | 'COMPLEX';

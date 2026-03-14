@@ -10,6 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 import React, { useEffect, useState, useCallback } from 'react';
 import { getReCaptchaQuestion, answerReCaptchaQuestion } from '../recaptcha';
 import CircleLoader from './CircleLoader';
+import './TheLastSpellingBeeReCaptcha.css';
 const CHAR_COLORS = [
     '#ff6347', '#4682b4', '#6a5acd', '#008080',
     '#a6d9fd', '#73c2fb', '#F26B3A', '#db7093',

@@ -1,4 +1,5 @@
 import { FC } from 'react';
+import './TheLastSpellingBeeReCaptcha.css';
 export type ITheLastSpellingBeeReCaptchaProps = {
     questionType?: 'CHARACTERS' | 'NUMBERS' | 'RANDOM' | 'COMPLEX';
     wordLength?: number;
